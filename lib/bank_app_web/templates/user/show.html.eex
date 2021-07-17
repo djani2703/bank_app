@@ -1,0 +1,19 @@
+<h1>Show User</h1>
+
+<ul>
+  <li>
+    <strong>Name:</strong>
+    <%= @user.name %>
+  </li>
+  <li>
+    <strong>Status:</strong>
+    <%= @user.status %>
+  </li>
+  <li>
+    <strong>Balance:</strong>
+    <%= @user.balance %>
+  </li>
+</ul>
+
+<span><%= link "All users", to: Routes.user_path(@conn, :index) %></span> |
+<span><%= link "Change status", to: Routes.user_path(@conn, :new_status?, @user) %></span>

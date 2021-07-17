@@ -1,0 +1,29 @@
+<h1>All users</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Status</th>
+      <th>Balance</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for user <- @users do %>
+    <tr>
+      <td><%= user.name %></td>
+      <td><%= user.status %></td>
+      <td><%= user.balance %></td>
+
+      <td>
+        <span><%= link "Show", to: Routes.user_path(@conn, :show, user) %></span> |
+        <span><%= link "Change status", to: Routes.user_path(@conn, :new_status?, user) %></span>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "Home", to: Routes.page_path(@conn, :index) %></span> |
+<span><%= link "New user", to: Routes.user_path(@conn, :new) %></span>

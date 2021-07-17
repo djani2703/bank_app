@@ -17,6 +17,13 @@ defmodule BankAppWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+
+    get "/users", UserController, :index
+    get "/users/new", UserController, :new
+    get "/users/:id/upd_status", UserController, :new_status?
+    get "/users/:id", UserController, :show
+    post "/users", UserController, :create?
+    put "/users/:id", UserController, :update
   end
 
   # Other scopes may use custom stacks.
