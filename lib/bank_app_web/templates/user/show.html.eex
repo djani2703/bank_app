@@ -16,4 +16,6 @@
 </ul>
 
 <span><%= link "All users", to: Routes.user_path(@conn, :index) %></span> |
-<span><%= link "Change status", to: Routes.user_path(@conn, :new_status?, @user) %></span>
+<span><%= link "Change status", to: Routes.user_path(@conn, :new_status?, @user) %></span> |
+<span><%= link "Up balance", to: Routes.user_path(@conn, :balance_up, @user) %></span> |
+<span><%= link "Down balance", to: Routes.user_path(@conn, :balance_down, @user) %></span>

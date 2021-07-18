@@ -19,6 +19,18 @@
       <%= error_tag f, :status %>
     <% end %>
 
+    <%= if @data == "up" do %>
+      <%= label f, :up_balance %>
+      <%= number_input f, :up_balance, step: "any" %>
+      <%= error_tag f, :up_balance %>
+    <% end %>
+
+    <%= if @data == "down" do %>
+      <%= label f, :down_balance %>
+      <%= number_input f, :down_balance, step: "any" %>
+      <%= error_tag f, :down_balance %>
+    <% end %>
+
   <% else %>
 
     <%= label f, :name %>

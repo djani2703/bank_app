@@ -45,6 +45,11 @@ defmodule BankAppWeb.UserController do
     end
   end
 
+  def change_user(conn, %{"id" => id, "user" => user_params}) do
+    user = Users.get_user!(id)
+    update(conn, user, user_params)
+  end
+
   def show(conn, %{"id" => id}) do
     user = Users.get_user!(id)
     render(conn, "show.html", user: user)
@@ -56,9 +61,57 @@ defmodule BankAppWeb.UserController do
     render(conn, "update.html", user: user, changeset: changeset, data: "status")
   end
 
-  def update(conn, %{"id" => id, "user" => user_params}) do
+  def change_status(conn, %{"id" => id, "user" => user_params}) do
     user = Users.get_user!(id)
+    update(conn, user, user_params)
+  end
 
+  def balance_up(conn, %{"id" => id}) do
+    can_change_balance?(conn, id, "up")
+  end
+
+  def balance_down(conn, %{"id" => id}) do
+    can_change_balance?(conn, id, "down")
+  end
+
+  def can_change_balance?(conn, id, flag) do
+    user = Users.get_user!(id)
+    case Map.get(user, :status) do
+      true ->
+        changeset = User.changeset(user)
+        render(conn, "update.html", user: user, changeset: changeset, data: flag)
+      _ ->
+        broadcast_msg!(conn, "Inactive user..", :show, user)
+    end
+  end
+
+  def change_balance(conn, %{"id" => id, "user" => %{"up_balance" => up}}) do
+    user = Users.get_user!(id)
+    case Float.parse(up) do
+      {up, _} ->
+        update(conn, user, %{"balance" => Map.get(user, :balance) + up})
+      :error ->
+        broadcast_msg!(conn, "Incorrect up balance data: #{up}..", :show, user)
+    end
+  end
+
+  def change_balance(conn, %{"id" => id, "user" => %{"down_balance" => down}}) do
+    user = Users.get_user!(id)
+    case Float.parse(down) do
+      {down, _} ->
+        new_balance = Map.get(user, :balance) - down
+        case new_balance >= 0 do
+          true ->
+            update(conn, user, %{"balance" => new_balance})
+          _ ->
+            broadcast_msg!(conn, "Not enough money to withdraw..", :show, user)
+        end
+      :error ->
+        broadcast_msg!(conn, "Incorrect down balance data: #{down}..", :show, user)
+    end
+  end
+
+  def update(conn, user, user_params) do
     case Users.update_user(user, user_params) do
       {:ok, user} ->
         conn

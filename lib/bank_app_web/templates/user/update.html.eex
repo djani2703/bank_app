@@ -1,6 +1,16 @@
 <%= if @data == "status" do %>
     <h1>Change status</h1>
-    <%= render "form.html", Map.put(assigns, :action, Routes.user_path(@conn, :update, @user)) %>
+    <%= render "form.html", Map.put(assigns, :action, Routes.user_path(@conn, :change_status, @user)) %>
+<% end %>
+
+<%= if @data == "up" do %>
+    <h1>Up balance</h1>
+    <%= render "form.html", Map.put(assigns, :action, Routes.user_path(@conn, :change_balance, @user)) %>
+<% end %>
+
+<%= if @data == "down" do %>
+    <h1>Down balance</h1>
+    <%= render "form.html", Map.put(assigns, :action, Routes.user_path(@conn, :change_balance, @user)) %>
 <% end %>
 
 <span><%= link "Back", to: Routes.user_path(@conn, :index) %></span>

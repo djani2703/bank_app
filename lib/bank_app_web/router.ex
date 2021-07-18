@@ -21,9 +21,14 @@ defmodule BankAppWeb.Router do
     get "/users", UserController, :index
     get "/users/new", UserController, :new
     get "/users/:id/upd_status", UserController, :new_status?
+    get "/users/:id/balance_up", UserController, :balance_up
+    get "/users/:id/balance_down", UserController, :balance_down
     get "/users/:id", UserController, :show
     post "/users", UserController, :create?
-    put "/users/:id", UserController, :update
+
+    put "/users/:id", UserController, :change_status
+    put "/users/:id/change_user", UserController, :change_user
+    put "/users/:id/up_balance", UserController, :change_balance
   end
 
   # Other scopes may use custom stacks.
