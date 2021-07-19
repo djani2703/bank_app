@@ -11,7 +11,7 @@
   <body>
     <header>
       <section class="container">
-        <a href="https://phoenixframework.org/" class="phx-logo">
+        <a href="/" class="phx-logo">
           <img src="<%= Routes.static_path(@conn, "/images/bank_banner.png") %>" alt="Phoenix Framework Logo"/>
         </a>
       </section>

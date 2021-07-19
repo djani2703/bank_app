@@ -1,0 +1,27 @@
+<h1>Transactions:</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>UserId</th>
+      <th>Type</th>
+      <th>Amount</th>
+      <th>Inserted ad</th>
+      <th>Updated ad</th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for transaction <- @transactions do %>
+    <tr>
+      <td><%= transaction.uid %></td>
+      <td><%= transaction.type %></td>
+      <td><%= transaction.amount %></td>
+      <td><%= transaction.inserted_at %></td>
+      <td><%= transaction.updated_at %></td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "Home", to: Routes.page_path(@conn, :index) %></span> |
+<span><%= link "All users", to: Routes.user_path(@conn, :index) %></span>

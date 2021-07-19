@@ -90,6 +90,7 @@ defmodule BankAppWeb.UserController do
     case Float.parse(up) do
       {up, _} ->
         update(conn, user, %{"balance" => Map.get(user, :balance) + up})
+        Users.add_transaction_note(id, "deposit", up)
       :error ->
         broadcast_msg!(conn, "Incorrect up balance data: #{up}..", :show, user)
     end
@@ -103,6 +104,7 @@ defmodule BankAppWeb.UserController do
         case new_balance >= 0 do
           true ->
             update(conn, user, %{"balance" => new_balance})
+            Users.add_transaction_note(id, "withdraw", down)
           _ ->
             broadcast_msg!(conn, "Not enough money to withdraw..", :show, user)
         end
@@ -114,10 +116,7 @@ defmodule BankAppWeb.UserController do
   def update(conn, user, user_params) do
     case Users.update_user(user, user_params) do
       {:ok, user} ->
-        conn
-        |> put_flash(:info, "User updated successfully!")
-        |> redirect(to: Routes.user_path(conn, :show, user))
-
+        broadcast_msg!(conn, "User updated successfully!", :show, user)
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "edit.html", user: user, changeset: changeset)
     end

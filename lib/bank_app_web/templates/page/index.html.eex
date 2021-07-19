@@ -14,4 +14,12 @@
       </li>
     </ul>
   </article>
+  <article class="column">
+    <h2>Transactions:</h2>
+    <ul>
+      <li>
+        <span><%= link "Transactions", to: Routes.transaction_path(@conn, :index) %></span>
+      </li>
+    </ul>
+  </article>
 </section>

@@ -3,6 +3,7 @@ defmodule BankApp.Users do
 
   alias BankApp.Repo
   alias BankApp.Users.User
+  alias BankApp.Transactions
 
   def get_user!(id) do
     Repo.get!(User, id)
@@ -30,5 +31,11 @@ defmodule BankApp.Users do
     user
     |> User.changeset(params)
     |> Repo.update()
+  end
+
+  def add_transaction_note(id, type, amount) do
+    Transactions.add_transaction(
+      %{uid: id, type: type, amount: amount}
+    )
   end
 end
