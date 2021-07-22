@@ -30,6 +30,7 @@ defmodule BankAppWeb.UserController do
     case Users.new_user?(name) do
       true ->
         create(conn, user_params)
+
       _ ->
         broadcast_msg!(conn, "User already exist..", :index)
     end
@@ -76,10 +77,12 @@ defmodule BankAppWeb.UserController do
 
   def can_change_balance?(conn, id, flag) do
     user = Users.get_user!(id)
+
     case Map.get(user, :status) do
       true ->
         changeset = User.changeset(user)
         render(conn, "update.html", user: user, changeset: changeset, data: flag)
+
       _ ->
         broadcast_msg!(conn, "Inactive user..", :show, user)
     end
@@ -87,10 +90,12 @@ defmodule BankAppWeb.UserController do
 
   def change_balance(conn, %{"id" => id, "user" => %{"up_balance" => up}}) do
     user = Users.get_user!(id)
+
     case Float.parse(up) do
       {up, _} ->
         update(conn, user, %{"balance" => Map.get(user, :balance) + up})
         Users.add_transaction_note(id, "deposit", up)
+
       :error ->
         broadcast_msg!(conn, "Incorrect up balance data: #{up}..", :show, user)
     end
@@ -98,18 +103,26 @@ defmodule BankAppWeb.UserController do
 
   def change_balance(conn, %{"id" => id, "user" => %{"down_balance" => down}}) do
     user = Users.get_user!(id)
+
     case Float.parse(down) do
       {down, _} ->
-        new_balance = Map.get(user, :balance) - down
-        case new_balance >= 0 do
-          true ->
-            update(conn, user, %{"balance" => new_balance})
-            Users.add_transaction_note(id, "withdraw", down)
-          _ ->
-            broadcast_msg!(conn, "Not enough money to withdraw..", :show, user)
-        end
+        can_withdraw?(conn, user, down)
+
       :error ->
         broadcast_msg!(conn, "Incorrect down balance data: #{down}..", :show, user)
+    end
+  end
+
+  def can_withdraw?(conn, %{:balance => balance, :id => id} = user, amount) do
+    new_balance = balance - amount
+
+    case new_balance >= 0 do
+      true ->
+        update(conn, user, %{"balance" => new_balance})
+        Users.add_transaction_note(id, "withdraw", amount)
+
+      _ ->
+        broadcast_msg!(conn, "Not enough money to withdraw..", :show, user)
     end
   end
 
@@ -117,6 +130,7 @@ defmodule BankAppWeb.UserController do
     case Users.update_user(user, user_params) do
       {:ok, user} ->
         broadcast_msg!(conn, "User updated successfully!", :show, user)
+
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "edit.html", user: user, changeset: changeset)
     end

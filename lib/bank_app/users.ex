@@ -17,8 +17,7 @@ defmodule BankApp.Users do
     get_all_users()
     |> Enum.map(fn %User{name: name} -> name end)
     |> Enum.member?(user_name)
-    |> Kernel.not
-
+    |> Kernel.not()
   end
 
   def create_user(params \\ %{}) do
@@ -34,8 +33,6 @@ defmodule BankApp.Users do
   end
 
   def add_transaction_note(id, type, amount) do
-    Transactions.add_transaction(
-      %{uid: id, type: type, amount: amount}
-    )
+    Transactions.add_transaction(%{uid: id, type: type, amount: amount})
   end
 end

@@ -2,35 +2,35 @@ defmodule BankAppWeb.Router do
   use BankAppWeb, :router
 
   pipeline :browser do
-    plug :accepts, ["html"]
-    plug :fetch_session
-    plug :fetch_flash
-    plug :protect_from_forgery
-    plug :put_secure_browser_headers
+    plug(:accepts, ["html"])
+    plug(:fetch_session)
+    plug(:fetch_flash)
+    plug(:protect_from_forgery)
+    plug(:put_secure_browser_headers)
   end
 
   pipeline :api do
-    plug :accepts, ["json"]
+    plug(:accepts, ["json"])
   end
 
   scope "/", BankAppWeb do
-    pipe_through :browser
+    pipe_through(:browser)
 
-    get "/", PageController, :index
+    get("/", PageController, :index)
 
-    get "/users", UserController, :index
-    get "/users/new", UserController, :new
-    get "/users/:id/upd_status", UserController, :new_status?
-    get "/users/:id/balance_up", UserController, :balance_up
-    get "/users/:id/balance_down", UserController, :balance_down
-    get "/users/:id", UserController, :show
-    post "/users", UserController, :create?
+    get("/users", UserController, :index)
+    get("/users/new", UserController, :new)
+    get("/users/:id/upd_status", UserController, :new_status?)
+    get("/users/:id/balance_up", UserController, :balance_up)
+    get("/users/:id/balance_down", UserController, :balance_down)
+    get("/users/:id", UserController, :show)
+    post("/users", UserController, :create?)
 
-    put "/users/:id", UserController, :change_status
-    put "/users/:id/change_user", UserController, :change_user
-    put "/users/:id/up_balance", UserController, :change_balance
+    put("/users/:id", UserController, :change_status)
+    put("/users/:id/change_user", UserController, :change_user)
+    put("/users/:id/change_balance", UserController, :change_balance)
 
-    get "/transactions", TransactionController, :index
+    get("/transactions", TransactionController, :index)
   end
 
   # Other scopes may use custom stacks.
@@ -49,8 +49,8 @@ defmodule BankAppWeb.Router do
     import Phoenix.LiveDashboard.Router
 
     scope "/" do
-      pipe_through :browser
-      live_dashboard "/dashboard", metrics: BankAppWeb.Telemetry
+      pipe_through(:browser)
+      live_dashboard("/dashboard", metrics: BankAppWeb.Telemetry)
     end
   end
 end
