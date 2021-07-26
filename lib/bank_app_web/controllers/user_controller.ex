@@ -42,7 +42,7 @@ defmodule BankAppWeb.UserController do
         broadcast_msg!(conn, "User created successfully!", :show, user)
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "new.html", changeset: changeset)
+        render(conn, "new.html", changeset: changeset, data: nil)
     end
   end
 
@@ -93,8 +93,8 @@ defmodule BankAppWeb.UserController do
 
     case Float.parse(up) do
       {up, _} ->
-        update(conn, user, %{"balance" => Map.get(user, :balance) + up})
         Users.add_transaction_note(id, "deposit", up)
+        update(conn, user, %{"balance" => Map.get(user, :balance) + up})
 
       :error ->
         broadcast_msg!(conn, "Incorrect up balance data: #{up}..", :show, user)
@@ -118,8 +118,8 @@ defmodule BankAppWeb.UserController do
 
     case new_balance >= 0 do
       true ->
-        update(conn, user, %{"balance" => new_balance})
         Users.add_transaction_note(id, "withdraw", amount)
+        update(conn, user, %{"balance" => new_balance})
 
       _ ->
         broadcast_msg!(conn, "Not enough money to withdraw..", :show, user)
@@ -132,7 +132,7 @@ defmodule BankAppWeb.UserController do
         broadcast_msg!(conn, "User updated successfully!", :show, user)
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "edit.html", user: user, changeset: changeset)
+        render(conn, "edit.html", user: user, changeset: changeset, data: nil)
     end
   end
 end
